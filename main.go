@@ -13,6 +13,7 @@ import (
 // ========================
 // https://qiita.com/hyo_07/items/59c093dda143325b1859
 // https://qiita.com/tfrcm/items/e2a3d7ce7ab8868e37f7
+// https://qiita.com/uchiko/items/64fb3020dd64cf211d4e
 
 
 // ========================
@@ -26,7 +27,7 @@ type Todo struct {
 }
 
 func dbInit() {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
+	db, err := gorm.Open("sqlite3", "maindb.sqlite3")
 	if err != nil {
 		panic("can not open database (dbInit) ")
 	}
@@ -35,7 +36,7 @@ func dbInit() {
 }
 
 func dbInsert(text string, status string) {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
+	db, err := gorm.Open("sqlite3", "maindb.sqlite3")
 	if err != nil {
 		panic("can not open database (dbInsert) ")
 	}
@@ -44,7 +45,7 @@ func dbInsert(text string, status string) {
 }
 
 func dbUpdate(id int, text string, status string) {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
+	db, err := gorm.Open("sqlite3", "maindb.sqlite3")
 	if err != nil {
 		panic("can not open database (dbUpdate) ")
 	}
@@ -57,7 +58,7 @@ func dbUpdate(id int, text string, status string) {
 }
 
 func dbDelete(id int) {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
+	db, err := gorm.Open("sqlite3", "maindb.sqlite3")
 	if err != nil {
 		panic("can not open database (dbDelete) ")
 	}
@@ -68,7 +69,7 @@ func dbDelete(id int) {
 }
 
 func dbGetAll() []Todo {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
+	db, err := gorm.Open("sqlite3", "maindb.sqlite3")
 	if err != nil {
 		panic("can not open database (dbGetAll) ")
 	}
@@ -79,7 +80,7 @@ func dbGetAll() []Todo {
 }
 
 func dbGetOne(id int) Todo {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
+	db, err := gorm.Open("sqlite3", "maindb.sqlite3")
 	if err != nil {
 		panic("can not open database (dbGetOne) ")
 	}
@@ -146,19 +147,19 @@ func main() {
 			panic("ERROR")
 		}
 		todo := dbGetOne(id)
-		ctx.HTML(200, "delete.html", gin.H{"todos": todo})
+		ctx.HTML(200, "delete.html", gin.H{"todo": todo})
 	})
 
-	// Delete
-	router.POST("/delete/:id", func(ctx *gin.Context){
-		n := ctx.Param("id")
-		id, err := strconv.Atoi(n)
-		if err != nil {
-			panic("ERROR")
-		}
-		dbDelete(id)
-		ctx.Redirect(302, "/")
-	})
+	//Delete
+    router.POST("/delete/:id", func(ctx *gin.Context) {
+        n := ctx.Param("id")
+        id, err := strconv.Atoi(n)
+        if err != nil {
+            panic("ERROR")
+        }
+        dbDelete(id)
+        ctx.Redirect(302, "/")
+    })
 
     router.Run()
 }
